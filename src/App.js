@@ -1,34 +1,61 @@
-import React, { useState } from "react";
-import ClassCounter from "./components/ClassCounter";
-import Counter from "./components/Counter";
-import PostItem from "./components/PostItem";
+import React, { useMemo, useState } from "react";
+import MyModal from "./components/MyModal/MyModal";
+import PostForm from "./components/PosrForm";
+import PostFilter from "./components/PostFilter";
 import PostList from "./components/PostList";
 import MyButton from "./components/UI/button/MyButton";
-import MyInput from "./components/UI/input/MyInput";
+
+
 import  "./styles/App.css"
 function App() {
   const [posts, setPosts] = useState([
-    {id:1, title : 'Javascript', body: 'Description'},
-    {id:2, title : 'Javascript-2', body: 'Description'},
-    {id:3, title : 'Javascript-3', body: 'Description'},
+    {id:1, title : 'аа1', body: 'ввв'},
+    {id:2, title : 'ббб2', body: 'яяя'},
+    {id:3, title : 'ааа3', body: 'ууу'},
   ])
-  const [posts2, setPosts2] = useState([
-    {id:1, title : 'Python', body: 'Description'},
-    {id:2, title : 'Python-2', body: 'Description'},
-    {id:3, title : 'Python-3', body: 'Description'},
-  ])
+
+  const[filter,setFilter] = useState({sort:'', query:''})
+  const [modal,setModal] = useState(false)
  
-  
-  
+  const sortedPosts = useMemo(()=>{
+    console.log('ОТБРАБОТАЛА ФУНКЦИЯ СОРТЕД ПОСТ')
+    if(filter.sort){
+      return [...posts].sort((a,b)=>a[filter.sort].localeCompare(b[filter.sort]))
+    }
+    
+      return posts
+
+  },[filter.sort, posts])
+
+  const sortedAndSearchPosts = useMemo(()=>{
+    return sortedPosts.filter(post => post.title.toLowerCase().includes(filter.query))
+
+  }, [filter.query,sortedPosts])
+ 
+  const createPost = (newPost) =>{
+        setPosts([...posts,newPost])
+        setModal(false)
+  }
+  //Получаем post из дочернего элемента
+  const removePost = (post) => {
+    setPosts(posts.filter(p => p.id !==post.id))
+
+  }
+
+
   return (
     <div className="App">
-      <form>
-        <MyInput type="text" placeholder="Название поста"/>
-        <MyInput type="text" placeholder="Текст поста"/>
-        <MyButton disabled>Создать пост</MyButton>
-      </form>
-     <PostList posts={posts} title={'Посты про jS'}/>
-     <PostList posts={posts2} title={'Посты про Python'}/>
+      <MyButton style = {{marginTop:'30px'}}onClick={()=> setModal(true)}>
+        Создать пользователя
+        </MyButton>
+      <MyModal visible={modal} setVisible={setModal}>
+      <PostForm create = {createPost}/>
+      </MyModal>
+      
+     <hr style={{margin: '15px 0'}}/>
+    <PostFilter filter={filter} setFilter={setFilter}/>
+       <PostList remove = {removePost} posts={sortedAndSearchPosts} title={'Посты про jS'}/>
+
     </div>
   );
 }
