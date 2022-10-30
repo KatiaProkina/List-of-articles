@@ -9,9 +9,9 @@ import MyButton from "./components/UI/button/MyButton";
 import  "./styles/App.css"
 function App() {
   const [posts, setPosts] = useState([
-    {id:1, title : 'аа1', body: 'ввв'},
-    {id:2, title : 'ббб2', body: 'яяя'},
-    {id:3, title : 'ааа3', body: 'ууу'},
+    {id:1, title : 'Первый пост', body: 'Текст поста'},
+    {id:2, title : 'Второй пост' , body: 'Текст поста'},
+    {id:3, title : 'Третий пост', body: 'Текст поста'},
   ])
 
   const[filter,setFilter] = useState({sort:'', query:''})
@@ -46,7 +46,7 @@ function App() {
   return (
     <div className="App">
       <MyButton style = {{marginTop:'30px'}}onClick={()=> setModal(true)}>
-        Создать пользователя
+        Создать пост
         </MyButton>
       <MyModal visible={modal} setVisible={setModal}>
       <PostForm create = {createPost}/>
